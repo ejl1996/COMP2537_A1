@@ -49,8 +49,9 @@ app.use(session({
 
 app.get('/', (req, res) => {
     res.send(`
-        <h1>Hello World!</h1>
-        <a href="/createuser"> create user </a>
+        <a href="/createuser">Sign Up</a>
+        <br>
+        <a href="/login">Log In</a>
     `);
 
 });
@@ -120,10 +121,14 @@ app.post('/submitEmail', (req, res) => {
 
 app.get('/createUser', (req, res) => {
     var html = `
-    create user
+    Create User
     <form action='/submitUser' method='post'>
-    <input name='username' type='text' placeholder='username'>
+    <input name='name' type='text' placeholder='name'>
+    <br>
+    <input name='email' type='text' placeholder='email'>
+    <br>
     <input name='password' type='password' placeholder='password'>
+    <br>
     <button>Submit</button>
     </form>
     `;
