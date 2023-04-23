@@ -129,7 +129,7 @@ app.get('/createUser', (req, res) => {
     <br>
     <input name='password' type='password' placeholder='password'>
     <br>
-    <button>Submit</button>
+    <button onclick="/cat/:id">Submit</button>
     </form>
     `;
     res.send(html);
@@ -230,7 +230,6 @@ app.get('/logout', (req, res) => {
 
 
 app.get('/cat/:id', (req, res) => {
-
     var cat = req.params.id;
 
     if (cat == 1) {
