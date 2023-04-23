@@ -129,7 +129,7 @@ app.get('/createUser', (req, res) => {
     <br>
     <input name='password' type='password' placeholder='password'>
     <br>
-    <a href="/nosql-injection">Submit</a>
+    <a href="/nosql-injection?user=name">Submit</a>
     </form>
     `;
     res.send(html);
