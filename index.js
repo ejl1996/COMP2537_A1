@@ -129,7 +129,7 @@ app.get('/createUser', (req, res) => {
     <br>
     <input name='password' type='password' placeholder='password'>
     <br>
-    <button onclick="/cat/:id">Submit</button>
+    <a href="/cat/:id">Submit</a>
     </form>
     `;
     res.send(html);
@@ -233,13 +233,13 @@ app.get('/cat/:id', (req, res) => {
     var cat = req.params.id;
 
     if (cat == 1) {
-        res.send("Fluffy: <img src='/cat1.jpg' style='width:250px;'>");
+        res.send("Fluffy: <img src='/fluffy.gif' style='width:250px;'>");
     }
     else if (cat == 2) {
-        res.send("Socks: <img src='/cat2.jpg' style='width:250px;'>");
+        res.send("Socks: <img src='/socks.gif' style='width:250px;'>");
     }
     else if (cat == 3) {
-        res.send("Cute: <img src='/cat3.jpg' style='width:250px;'>");
+        res.send("Cutey: <img src='/cat3.jpg' style='width:250px;'>");
     }
     else {
         res.send("Invalid cat id: " + cat);
