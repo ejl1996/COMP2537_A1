@@ -58,21 +58,6 @@ app.get('/', (req, res) => {
 
 app.get('/nosql-injection', async (req, res) => {
     var username = req.query.user;
-    var cat = req.params.id;
-
-    if (cat == 1) {
-        res.send("Fluffy: <img src='/fluffy.gif' style='width:250px;'>");
-    }
-    else if (cat == 2) {
-        res.send("Socks: <img src='/socks.gif' style='width:250px;'>");
-    }
-    else if (cat == 3) {
-        res.send("Cutey: <img src='/cat3.jpg' style='width:250px;'>");
-    }
-    else {
-        res.send("Invalid cat id: " + cat);
-    }
-});
 
 if (!username) {
     res.send(`<h3>no user provided - try /nosql-injection?user=name</h3> <h3>or /nosql-injection?user[$ne]=name</h3>`);
