@@ -23,6 +23,8 @@ const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 
+console.log(mongodb_password)
+console.log(mongodb_user)
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
@@ -30,10 +32,12 @@ var { database } = include('databaseConnection');
 
 const userCollection = database.db(mongodb_database).collection('users');
 
+// initially was /session, now /test in mongoURL 
 app.use(express.urlencoded({ extended: false }));
 
 var mongoStore = MongoStore.create({
-    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/sessions`,
+    mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@clustera1.squca6a.mongodb.net/test`,
+    // mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/test`,
     crypto: {
         secret: mongodb_session_secret
     }
@@ -92,6 +96,19 @@ app.get('/about', (req, res) => {
     res.send("<h1 style='background-color: " + bg + "; color:" + color + ";'>Patrick Guichon</h1>");
 });
 
+app.get('/logout', (req, res) => {
+    if (req.session.authenticated) {
+        req.session.destroy(err => {
+            if (err) {
+                res.status(400).send('')
+            } else {
+                res.status(200).redirect('/')
+            }
+        });
+    } else {
+        res.end()
+    }
+})
 
 app.get('/contact', (req, res) => {
     var missingEmail = req.query.missing;
@@ -120,6 +137,7 @@ app.post('/submitEmail', (req, res) => {
 
 
 app.get('/createUser', (req, res) => {
+
     var html = `
     Create User
     <form action='/submitUser' method='post'>
@@ -163,15 +181,15 @@ app.post('/submitUser', async (req, res) => {
         console.log(validationResult.error);
         res.redirect("/createUser");
         return;
+    } else {
+        var hashedPassword = await bcrypt.hash(password, saltRounds);
+        await userCollection.insertOne({ username: username, password: hashedPassword });
+        console.log("Inserted user");
+        res.redirect("/login")
+        return;
     }
-
-    var hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    await userCollection.insertOne({ username: username, password: hashedPassword });
-    console.log("Inserted user");
-
-    var html = "successfully created user";
-    res.send(html);
+    // var html = "successfully created user";
+    // res.send(html);
 });
 
 app.post('/loggingin', async (req, res) => {
@@ -200,7 +218,7 @@ app.post('/loggingin', async (req, res) => {
         req.session.username = username;
         req.session.cookie.maxAge = expireTime;
 
-        res.redirect('/loggedIn');
+        res.redirect('/members');
         return;
     }
     else {
@@ -220,7 +238,7 @@ app.get('/loggedin', (req, res) => {
     res.send(html);
 });
 
-app.get('/logout', (req, res) => {
+app.get('/logoutuser', (req, res) => {
     req.session.destroy();
     var html = `
     You are logged out.
@@ -229,22 +247,51 @@ app.get('/logout', (req, res) => {
 });
 
 
-app.get('/cat/:id', (req, res) => {
+app.get('/members', (req, res) => {
     var cat = req.params.id;
+    var randomNum = Math.floor(Math.random() * 3) + 1;
+    var nameOfUser = req.session.username
+    var html = `Name ${nameOfUser}`
+    var html1 = `<form action='/submitEmail' method='get'>
+        <input name='logout' type='text' placeholder='logout'>
+            <button>Log Out</button>
+    </form>
+    `
+    if (randomNum == 1) {
+        res.send(html + "Fluffy: <img src='/fluffy.gif' style='width:250px;'>" + html1);
+    }
 
-    if (cat == 1) {
-        res.send("Fluffy: <img src='/fluffy.gif' style='width:250px;'>");
+    else if (randomNum == 2) {
+        res.send(html + "Socks: <img src='/socks.gif' style='width:250px;'>" + html1);
     }
-    else if (cat == 2) {
-        res.send("Socks: <img src='/socks.gif' style='width:250px;'>");
-    }
-    else if (cat == 3) {
-        res.send("Cutey: <img src='/cat3.jpg' style='width:250px;'>");
+    else if (randomNum == 3) {
+        res.send(html + "Cutey: <img src='/cat3.jpg' style='width:250px;'>" + html1);
     }
     else {
         res.send("Invalid cat id: " + cat);
     }
 });
+
+
+
+// app.get('/cat/:id', (req, res) => {
+//     var cat = req.params.id;
+//     var randomNum = Math.floor(Math.random() * 3) + 1;
+
+//     if (randomNum == 1) {
+//         res.send("Fluffy: <img src='/fluffy.gif' style='width:250px;'>");
+//     }
+//     else if (cat == 2) {
+//         res.send("Socks: <img src='/socks.gif' style='width:250px;'>");
+//     }
+//     else if (cat == 3) {
+//         res.send("Cutey: <img src='/cat3.jpg' style='width:250px;'>");
+//     }
+//     else {
+//         res.send("Invalid cat id: " + cat);
+//     }
+// });
+
 
 
 app.use(express.static(__dirname + "/public"));
