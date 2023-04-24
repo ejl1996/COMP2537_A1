@@ -251,21 +251,20 @@ app.get('/members', (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
-    var html = `Name ${nameOfUser}`
+    var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<form action='/submitEmail' method='get'>
-        <input name='logout' type='text' placeholder='logout'>
-            <button>Log Out</button>
+            <button>Sign Out</button>
     </form>
     `
     if (randomNum == 1) {
-        res.send(html + "Fluffy: <img src='/fluffy.gif' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1);
     }
 
     else if (randomNum == 2) {
-        res.send(html + "Socks: <img src='/socks.gif' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1);
     }
     else if (randomNum == 3) {
-        res.send(html + "Cutey: <img src='/cat3.jpg' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1);
     }
     else {
         res.send("Invalid cat id: " + cat);
