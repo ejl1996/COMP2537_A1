@@ -223,12 +223,12 @@ app.post('/loggingin', async (req, res) => {
 
     console.log(result);
     if (result.length != 1) {
-        //res.send("User Not Found");
-        console.log("user not found");
-        res.redirect("/login");
+        res.send("User Not Found" + "<br>" + '<a href="/login">Try again</a>');
+        //console.log("user not found");
+        //res.redirect("/login");
         return;
     }
-    if (await bcrypt.compare(password, result[0].password)) {
+    else if (await bcrypt.compare(password, result[0].password)) {
         console.log("correct password");
         req.session.authenticated = true;
         req.session.username = username;
@@ -243,9 +243,9 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
     else {
-        //res.send("Incorrect Password");
-        console.log("incorrect password");
-        res.redirect("/login");
+        res.send("Incorrect Password" + '<a href="/login">Try again</a>');
+        //console.log("incorrect password");
+        //res.redirect("/login");
         return;
     }
 });
@@ -255,16 +255,16 @@ app.get('/loggedin', (req, res) => {
         res.redirect('/login');
     }
     var html = `
-    You are logged in!
-    `;
+            You are logged in!
+            `;
     res.send(html);
 });
 
 app.get('/logoutuser', (req, res) => {
     req.session.destroy();
     var html = `
-    You are logged out.
-    `;
+            You are logged out.
+            `;
     res.send(html);
 });
 
@@ -276,8 +276,8 @@ app.get('/members', (req, res) => {
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
     //var html1 = `<button onclick="window.location.href='localhost:3000';">Sign out</button>`
-    var members = `<a href ="/members"> Go to Members Area</a>
-    </form >
+    var members = `<a href="/members"> Go to Members Area</a>
+        </form >
         `
     if (randomNum == 1) {
         res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1 + members);
