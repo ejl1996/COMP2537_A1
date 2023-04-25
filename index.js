@@ -153,16 +153,22 @@ app.get('/createUser', (req, res) => {
     res.send(html);
 });
 
-
 app.get('/login', (req, res) => {
+    var invalidEmailAndPassword = req.query.invalidEmailAndPassword;
+    var invalidPassword = req.query.invalidPassword;
     var html = `
-    log in
+    Log In
     <form action='/loggingin' method='post'>
     <input name='username' type='text' placeholder='username'>
     <input name='password' type='password' placeholder='password'>
-    <button>Submit</button>
+    <button>Login</button>
     </form>
     `;
+    if (invalidEmailAndPassword == 1) {
+        html += "<br> Email and password not found."
+    } else if (invalidPassword == 1) {
+        html += "<br> Invalid password."
+    }
     res.send(html);
 });
 
@@ -230,6 +236,11 @@ app.post('/loggingin', async (req, res) => {
         res.redirect('/members');
         return;
     }
+    else if (!isCorrectPassword) {
+        req.session.authenticated = false;
+        res.redirect('/login?invalidPassword=1');
+        return;
+    }
     else {
         console.log("incorrect password");
         res.redirect("/login");
@@ -260,7 +271,6 @@ app.get('/members', (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
-    //req.session.GLOBAL_AUTHENTICATED = true;
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/">Log out</a>`
     var members = `<a href="/members">Go to Members Area</a>
@@ -281,6 +291,12 @@ app.get('/members', (req, res) => {
     }
 });
 
+GLOBAL_AUTHENTICATED = false;
+app.post('/login', (req, res) => {
+    if (req.body.username === 'admin' && req.body.password === 'admin') {
+        GLOBAL_AUTHENTICATED = true;
+    }
+});
 
 
 // app.get('/cat/:id', (req, res) => {
@@ -305,7 +321,7 @@ app.get('/members', (req, res) => {
 
 app.use(express.static(__dirname + "/public"));
 
-app.get('/pagedoesnotexist', (req, res) => {
+app.get("*", (req, res) => {
     res.status(404);
     res.send("Page not found - 404");
 })
