@@ -223,8 +223,8 @@ app.post('/loggingin', async (req, res) => {
 
     console.log(result);
     if (result.length != 1) {
-        res.send("User Not Found");
-        //console.log("user not found");
+        //res.send("User Not Found");
+        console.log("user not found");
         res.redirect("/login");
         return;
     }
@@ -243,8 +243,8 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
     else {
-        res.send("Incorrect Password");
-        //console.log("incorrect password");
+        //res.send("Incorrect Password");
+        console.log("incorrect password");
         res.redirect("/login");
         return;
     }
@@ -275,7 +275,8 @@ app.get('/members', (req, res) => {
     var nameOfUser = req.session.username
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
-    var members = `<a href="/members">Go to Members Area</a>
+    //var html1 = `<button onclick="window.location.href='localhost:3000';">Sign out</button>`
+    var members = `<a href ="/members"> Go to Members Area</a>
     </form >
         `
     if (randomNum == 1) {
