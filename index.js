@@ -141,13 +141,13 @@ app.get('/createUser', (req, res) => {
     var html = `
     Create User
     <form action='/submitUser' method='post'>
-    <input name='name' type='text' placeholder='name'>
+    <input name='username' type='text' placeholder='username'>
     <br>
     <input name='email' type='text' placeholder='email'>
     <br>
     <input name='password' type='password' placeholder='password'>
     <br>
-    <a href="/nosql-injection?user=name">Submit</a>
+    <button>Submit</button>
     </form>
     `;
     res.send(html);
@@ -167,8 +167,12 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/submitUser', async (req, res) => {
+    console.log('Submit user')
+    console.log('hello world')
+    console.log(req.body)
     var username = req.body.username;
     var password = req.body.password;
+    var email = req.body.email;
 
     const schema = Joi.object(
         {
@@ -183,9 +187,14 @@ app.post('/submitUser', async (req, res) => {
         return;
     } else {
         var hashedPassword = await bcrypt.hash(password, saltRounds);
-        await userCollection.insertOne({ username: username, password: hashedPassword });
+        await userCollection.insertOne({ username: username, password: hashedPassword, email: email });
         console.log("Inserted user");
-        res.redirect("/login")
+
+        req.session.authenticated = true;
+        req.session.username = username;
+        req.session.cookie.maxAge = expireTime;
+
+        res.redirect("/members")
         return;
     }
     // var html = "successfully created user";
@@ -251,19 +260,21 @@ app.get('/members', (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
+    //req.session.GLOBAL_AUTHENTICATED = true;
     var html = `<h1>Hello ${nameOfUser}</h1>`
-    var html1 = `<a href="/">Log out</a>
-    </form>
-    `
+    var html1 = `<a href="/">Log out</a>`
+    var members = `<a href="/members">Members</a>
+    </form >
+        `
     if (randomNum == 1) {
-        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1 + members);
     }
 
     else if (randomNum == 2) {
-        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1 + members);
     }
     else if (randomNum == 3) {
-        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1);
+        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1 + members);
     }
     else {
         res.send("Invalid cat id: " + cat);
