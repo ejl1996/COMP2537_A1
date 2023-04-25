@@ -295,30 +295,27 @@ app.get('/members', (req, res) => {
 });
 
 GLOBAL_AUTHENTICATED = false;
+app.use(express.urlencoded({ extended: false }))
 app.post('/login', (req, res) => {
+    //set global variable to true if authenticated
     if (req.body.username === 'admin' && req.body.password === 'admin') {
         GLOBAL_AUTHENTICATED = true;
     }
+    res.redirect('/protectedRoute');
 });
 
-//comment
-// app.get('/cat/:id', (req, res) => {
-//     var cat = req.params.id;
-//     var randomNum = Math.floor(Math.random() * 3) + 1;
+//only for authenticated users
+const authenticatedOnly = (req, res, next) => {
+    next();
+};
 
-//     if (randomNum == 1) {
-//         res.send("Fluffy: <img src='/fluffy.gif' style='width:250px;'>");
-//     }
-//     else if (cat == 2) {
-//         res.send("Socks: <img src='/socks.gif' style='width:250px;'>");
-//     }
-//     else if (cat == 3) {
-//         res.send("Cutey: <img src='/cat3.jpg' style='width:250px;'>");
-//     }
-//     else {
-//         res.send("Invalid cat id: " + cat);
-//     }
-// });
+const f1 = (req, res, next) => {
+    next()
+}
+const f2 = (req, res) => {
+    res.send('<h1> anotherRoute</h1>');
+}
+app.get('/anotherRoute', f1, f2);
 
 
 
