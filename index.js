@@ -263,7 +263,7 @@ app.get('/members', (req, res) => {
     //req.session.GLOBAL_AUTHENTICATED = true;
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/">Log out</a>`
-    var members = `<a href="/members">Members</a>
+    var members = `<a href="/members">Go to Members Area</a>
     </form >
         `
     if (randomNum == 1) {
