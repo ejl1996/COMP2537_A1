@@ -260,11 +260,6 @@ app.post('/loggingin', async (req, res) => {
         res.redirect('/members');
         return;
     }
-    else if (!isCorrectPassword) {
-        req.session.authenticated = false;
-        res.redirect('/login?invalidPassword=1');
-        return;
-    }
     else {
         res.send("Incorrect Password" + "<br>" + '<a href="/login">Try again</a>');
         //console.log("incorrect password");
