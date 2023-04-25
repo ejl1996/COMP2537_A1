@@ -243,7 +243,7 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
     else {
-        res.send("Incorrect Password" + '<a href="/login">Try again</a>');
+        res.send("Incorrect Password" + "<br>" + '<a href="/login">Try again</a>');
         //console.log("incorrect password");
         //res.redirect("/login");
         return;
