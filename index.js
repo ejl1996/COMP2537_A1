@@ -322,8 +322,7 @@ app.post('/login', (req, res) => {
 app.use(express.static(__dirname + "/public"));
 
 app.get("*", (req, res) => {
-    res.status(404);
-    res.send("Page not found - 404");
+    res.status(404).send("Page not found - 404");
 })
 
 app.listen(port, () => {
