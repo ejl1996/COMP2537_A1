@@ -294,28 +294,28 @@ app.get('/members', (req, res) => {
     }
 });
 
-GLOBAL_AUTHENTICATED = false;
+//GLOBAL_AUTHENTICATED = false;
 app.use(express.urlencoded({ extended: false }))
 app.post('/login', (req, res) => {
     //set global variable to true if authenticated
     if (req.body.username === 'admin' && req.body.password === 'admin') {
-        GLOBAL_AUTHENTICATED = true;
+        req.session.GLOBAL_AUTHENTICATED = true;
     }
     res.redirect('/protectedRoute');
 });
 
 //only for authenticated users
 const authenticatedOnly = (req, res, next) => {
-    next();
+    if (!req.session.GLOBAL_AUTHENTICATED) {
+        return res.status(401).json({ error: 'not authenticated' });
+    }
+    next(); //allow next route to run
 };
 
-const f1 = (req, res, next) => {
-    next()
-}
-const f2 = (req, res) => {
-    res.send('<h1> anotherRoute</h1>');
-}
-app.get('/anotherRoute', f1, f2);
+app.use(authenticatedOnly);
+app.get('/protectedRoute', (req, res) => {
+    res.send('<h1> protectedRoute </h1>');
+});
 
 
 
