@@ -60,31 +60,6 @@ app.get('/', (req, res) => {
 
 });
 
-app.get('/members', (req, res) => {
-    var cat = req.params.id;
-    var randomNum = Math.floor(Math.random() * 3) + 1;
-    var nameOfUser = req.session.username
-    var html = `<h1>Hello ${nameOfUser}</h1>`
-    var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
-    //var html1 = `<button onclick="window.location.href='localhost:3000';">Sign out</button>`
-    var members = `<a href="/members"> Go to Members Area</a>
-        </form >
-        `
-    if (randomNum == 1) {
-        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1 + members);
-    }
-
-    else if (randomNum == 2) {
-        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1 + members);
-    }
-    else if (randomNum == 3) {
-        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1 + members);
-    }
-    else {
-        res.send("Invalid cat id: " + cat);
-    }
-});
-
 app.get('/nosql-injection', async (req, res) => {
     var username = req.query.user;
 
@@ -293,6 +268,57 @@ app.get('/logoutuser', (req, res) => {
     res.send(html);
 });
 
+//GLOBAL_AUTHENTICATED = false;
+app.use(express.urlencoded({ extended: false }))
+app.post('/login', (req, res) => {
+    //set global variable to true if authenticated
+    const result = await usersModel.find({
+        username: req.body.username
+    })
+    if (bcrypt.compareSync(req.body.password, result[0].password)) {
+        req.session.GLOBAL_AUTHENTICATED = true;
+        req.session.loggedUsername = req.body.username;
+        req.session.loggedPassword = req.body.password;
+    }
+    res.redirect('/protectedRoute');
+});
+
+//only for authenticated users
+const authenticatedOnly = (req, res, next) => {
+    if (!req.session.GLOBAL_AUTHENTICATED) {
+        return res.status(401).json({ error: 'not authenticated' });
+    }
+    next(); //allow next route to run
+};
+
+app.use(authenticatedOnly);
+app.get('/members', (req, res) => {
+    var cat = req.params.id;
+    var randomNum = Math.floor(Math.random() * 3) + 1;
+    var nameOfUser = req.session.username
+    var html = `<h1>Hello ${nameOfUser}</h1>`
+    var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
+    //var html1 = `<button onclick="window.location.href='localhost:3000';">Sign out</button>`
+    var members = `<a href="/members"> Go to Members Area</a>
+        </form >
+        `
+    if (randomNum == 1) {
+        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1 + members);
+    }
+
+    else if (randomNum == 2) {
+        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1 + members);
+    }
+    else if (randomNum == 3) {
+        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1 + members);
+    }
+    else {
+        res.send("Invalid cat id: " + cat);
+    }
+});
+app.get('/protectedRoute', (req, res) => {
+    res.send('<h1> protectedRoute </h1>');
+});
 
 app.use(express.static(__dirname + "/public"));
 
