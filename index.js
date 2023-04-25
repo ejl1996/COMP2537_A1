@@ -223,7 +223,8 @@ app.post('/loggingin', async (req, res) => {
 
     console.log(result);
     if (result.length != 1) {
-        console.log("user not found");
+        res.send("User Not Found");
+        //console.log("user not found");
         res.redirect("/login");
         return;
     }
@@ -242,7 +243,8 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
     else {
-        console.log("incorrect password");
+        res.send("Incorrect Password");
+        //console.log("incorrect password");
         res.redirect("/login");
         return;
     }
