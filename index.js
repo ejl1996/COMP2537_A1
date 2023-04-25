@@ -158,19 +158,18 @@ app.get('/members', (req, res) => {
     var nameOfUser = req.session.username
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
-    //var html1 = `<button onclick="window.location.href='localhost:3000';">Sign out</button>`
     var members = `<a href="/members"> Go to Members Area</a>
         </form >
         `
     if (randomNum == 1) {
-        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + html1 + members);
+        res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + "<br>" + html1 + "<br>" + members);
     }
 
     else if (randomNum == 2) {
-        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + html1 + members);
+        res.send(html + "<img src='/socks.gif' style='width:250px;'>" + "<br>" + html1 + "<br>" + members);
     }
     else if (randomNum == 3) {
-        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + html1 + members);
+        res.send(html + "<img src='/cat3.jpg' style='width:250px;'>" + "<br>" + html1 + "<br>" + members);
     }
     else {
         res.send("Invalid cat id: " + cat);
