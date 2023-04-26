@@ -157,7 +157,7 @@ app.get('/members', (req, res) => {
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
     var html = `<h1>Hello ${nameOfUser}</h1>`
-    var html1 = `<a href="/" class="btn btn-primary">Sign out</a>`
+    var html1 = `<a href="/logoutuser" class="btn btn-primary">Sign out</a>`
     var members = `<a href="/members"> Go to Members Area</a>
         </form >
         `
