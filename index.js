@@ -156,11 +156,16 @@ app.get('/members', (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
+    var authenticated = req.session.authenticated
     var html = `<h1>Hello ${nameOfUser}</h1>`
     var html1 = `<a href="/logoutuser" class="btn btn-primary">Sign out</a>`
     var members = `<a href="/members"> Go to Members Area</a>
         </form >
         `
+    if (!authenticated) {
+        res.redirect('/');
+        return
+    }
     if (randomNum == 1) {
         res.send(html + "<img src='/fluffy.gif' style='width:250px;'>" + "<br>" + html1 + "<br>" + members);
     }
@@ -175,6 +180,16 @@ app.get('/members', (req, res) => {
         res.send("Invalid cat id: " + cat);
     }
 });
+
+//app.get('/test', (req, res) => {
+//var x = 5;
+
+//if (x == 5) {
+//res.send("Hello");
+//return;
+//} 
+//res.send("bye");
+//});
 
 app.get('/login', (req, res) => {
     var invalidEmailAndPassword = req.query.invalidEmailAndPassword;
