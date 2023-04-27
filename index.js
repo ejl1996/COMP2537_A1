@@ -152,6 +152,21 @@ app.get('/createUser', (req, res) => {
     res.send(html);
 });
 
+const authenticatedOnly = (req, res, next) => {
+    var authenticated = req.session.authenticated
+    if (!authenticated) {
+        console.log("kicked out by midddleware")
+        res.redirect('/');
+        return
+    }
+    else {
+        console.log("middleware says logged in")
+        next();
+    }
+};
+
+app.use('/members', authenticatedOnly);
+
 app.get('/members', (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
