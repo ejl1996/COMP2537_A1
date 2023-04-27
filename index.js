@@ -155,8 +155,8 @@ app.get('/createUser', (req, res) => {
 const authenticatedOnly = (req, res, next) => {
     var authenticated = req.session.authenticated
     if (!authenticated) {
-        console.log("kicked out by midddleware")
-        res.redirect('/');
+        res.send("kicked out by midddleware")
+        console.log('/');
         return
     }
     else {
