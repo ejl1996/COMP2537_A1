@@ -165,6 +165,8 @@ const authenticatedOnly = (req, res, next) => {
     }
 };
 
+app.use('/members', authenticatedOnly);
+
 
 app.get('/members', (req, res) => {
     var cat = req.params.id;
