@@ -13,7 +13,7 @@ const app = express();
 
 const Joi = require("joi");
 
-const expireTime = 1; //expires after 1 hour  (hours * minutes * seconds * millis)
+const expireTime = 60 * 60 * 1000;  //expires after 1 hour  (hours * minutes * seconds * millis)
 
 /* secret information section */
 const mongodb_host = process.env.MONGODB_HOST;
@@ -164,9 +164,9 @@ const authenticatedOnly = (req, res, next) => {
     }
 };
 
-app.use('/members', authenticatedOnly);
+//app.use('/members', authenticatedOnly);
 
-app.get('/members', (req, res) => {
+app.get('/members', authenticatedOnly, (req, res) => {
     var cat = req.params.id;
     var randomNum = Math.floor(Math.random() * 3) + 1;
     var nameOfUser = req.session.username
