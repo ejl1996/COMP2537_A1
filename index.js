@@ -197,8 +197,6 @@ app.get('/members', (req, res) => {
     }
 });
 
-app.use('/members', authenticatedOnly);
-
 //app.get('/test', (req, res) => {
 //var x = 5;
 
