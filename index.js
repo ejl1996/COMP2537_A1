@@ -165,7 +165,6 @@ const authenticatedOnly = (req, res, next) => {
     }
 };
 
-app.use('/members', authenticatedOnly);
 
 app.get('/members', (req, res) => {
     var cat = req.params.id;
@@ -195,6 +194,8 @@ app.get('/members', (req, res) => {
         res.send("Invalid cat id: " + cat);
     }
 });
+
+app.use('/members', authenticatedOnly);
 
 //app.get('/test', (req, res) => {
 //var x = 5;
