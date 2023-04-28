@@ -310,10 +310,11 @@ app.get('/loggedin', (req, res) => {
 
 app.get('/logoutuser', (req, res) => {
     req.session.destroy();
-    var html = `
-            You are logged out.
-            `;
-    res.send(html);
+    res.redirect('/');
+    //var html = `
+    //You are logged out.
+    //`;
+    //res.send(html);
 });
 
 app.use(express.static(__dirname + "/public"));
