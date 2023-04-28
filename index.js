@@ -134,26 +134,6 @@ app.post('/submitEmail', (req, res) => {
     }
 });
 
-app.get('/login', (req, res) => {
-    var invalidEmailAndPassword = req.query.invalidEmailAndPassword;
-    var invalidPassword = req.query.invalidPassword;
-    var html = `
-    Log In
-    <form action='/loggingin' method='post'>
-    <input name='username' type='text' placeholder='username'>
-    <input name='password' type='password' placeholder='password'>
-    <button>Login</button>
-    </form>
-    `;
-    if (invalidEmailAndPassword == 1) {
-        html += "<br> Email and password not found."
-    } else if (invalidPassword == 1) {
-        html += "<br> Invalid password."
-    }
-    res.send(html);
-});
-
-
 app.get('/createUser', (req, res) => {
 
     var html = `
@@ -225,6 +205,25 @@ app.get('/members', (req, res) => {
 //} 
 //res.send("bye");
 //});
+
+app.get('/login', (req, res) => {
+    var invalidEmailAndPassword = req.query.invalidEmailAndPassword;
+    var invalidPassword = req.query.invalidPassword;
+    var html = `
+    Log In
+    <form action='/loggingin' method='post'>
+    <input name='username' type='text' placeholder='username'>
+    <input name='password' type='password' placeholder='password'>
+    <button>Login</button>
+    </form>
+    `;
+    if (invalidEmailAndPassword == 1) {
+        html += "<br> Email and password not found."
+    } else if (invalidPassword == 1) {
+        html += "<br> Invalid password."
+    }
+    res.send(html);
+});
 
 app.post('/submitUser', async (req, res) => {
     console.log('Submit user')
